@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot.css') }}">
+    <!-- Add any additional styles here -->
+    <style>
+    body {
+        background-color: lightgrey;
+        font-family: 'Comic Sans MS';
+        margin: 0;
+    }
+    header h1 {
+        text-align: center;
+        font-size: 3em;
+    }
+    header h2 {
+        text-align: center;
+        font-size: 2em;
+    }
+    main {
+        display: flex; /* Make main a flex container */
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 20px; /* Add some space around the chatbot */
+        justify-content: space-between;
+    }
+    
+    .description {
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% - 120px);/* Make description occupy half of the screen */
+        text-align: justify; /* Justify the text */
+        margin-right: 100px;
+        margin-left: 50px;
+        font-size: 1.5em;
+        margin-bottom: 60px; /* Add margin to the right of the description */
+    }
+    .interaction {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: justify;
+        width: calc(100% - 120px);
+        margin-right: 100px;
+        margin-left: 50px;
+        font-size: 1.5em;
+    }
+    .chatbot-and-table-container {
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% - 120px);/* Make description occupy half of the screen */
+        text-align: justify; /* Justify the text */
+        margin-right: 20px;
+        margin-left: 100px;
+        font-size: 1.0em; /* Add margin to the right of the description */
+    }
+    .chatbot {
+        width: 50%;
+        margin-left: 20px; /* Add margin to the left of the chatbot */
+    }
+    .description img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 300px; /* Adjust this to make the image smaller or larger */
+        height: auto; /* This will maintain the aspect ratio of the image */
+        display: block; /* This will allow us to center the image */
+        margin: 0 auto; /* This will center the image */
+    }
+    .text-and-image {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 40%;
+        margin-right: 20px;
+    /* Your existing CSS properties... */
+    }
+    #bullet-list-container {
+    width: 50%;
+    }
+    #bullet-list {
+        overflow-y: auto;
+        max-height: 500px;
+        width: 100%;
+        font-size: 0.8em;
+    }
+    #bullet-list-container h4 {
+    text-align: center;
+    }
+    .chatbot-container, .tables-container {
+    width: 50%; /* Make chatbot and tables each take up half the width of main */
+    }
+
+    button {
+        width: 150px; /* Adjust as needed */
+        height: 50px; /* Adjust as needed */
+        font-size: 12px; /* Adjust as needed */
+    }
+    #table-container {
+    display: flex;
+    justify-content: top;
+    align-items: flex-start;
+    }
+    #table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    #myChart {
+    width: 400px;
+    height: 400px;
+    }
+    .myTable {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .myTable th, .myTable td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Instituto de Investigación de Recursos Biológicos Alexander von Humboldt</h1>
+        <h2>Centro de Economía y Finanzas para la Biodiversidad</h2>
+    </header>
+    <main>
+        <df-messenger
+            chat-title="Asistente_Virtual"
+            agent-id="bbcd3607-0eac-485a-b08d-0b5a5847a8db"
+            language-code="es"
+        ></df-messenger> 
+        <div class="description">
+            <div class="text-and-image">
+                <p>¡Bienvenido al Espacio de Interacción Virtual proporcionado por nuestro Bot Conversacional! Este asistente virtual ha sido diseñado para brindar apoyo integral a los investigadores del Centro de Economía y Finanzas para la Biodiversidad. Su función principal es simplificar el proceso de consulta y búsqueda de información, ofreciendo respuestas precisas a preguntas relacionadas con economía y finanzas en el contexto de la biodiversidad.
+
+                    A través de este espacio virtual, los usuarios tienen acceso directo a datos relevantes y pueden obtener información clave de manera eficiente. El enfoque central de este bot es optimizar el flujo de trabajo de investigación, convirtiéndose en un aliado invaluable para los profesionales que buscan explorar y comprender la intersección entre la economía, las finanzas y la biodiversidad.
+                    
+                    Siéntete libre de hacer preguntas o solicitar información específica. Estamos aquí para hacer que tu experiencia de investigación sea más accesible y efectiva. ¡Adelante, comienza a explorar la riqueza de conocimientos que este espacio de interacción tiene para ofrecer!</p>
+                <img src="https://www.fundacionmalpelo.org/wp-content/uploads/2020/04/Logo-humboldt.png" alt="Logo">
+            </div>
+        </div>
+        <div class="interaction">
+            <p id="info-paragraph">
+                El espacio de interaccion virtual esta ahora activo, a continuacion podras consultar informacion relacionada con los distintos proyectos que el centro posee.
+            </p>
+            <img id="acceso-denegado" src="https://cdn-icons-png.flaticon.com/512/4963/4963030.png" alt="Acceso denegado">
+            <div id="bullet-list-container">
+                <h4>Categorias a seleccionar</h4>
+                <div id="bullet-list"></div>
+            </div>
+        </div>
+        
+        <div class="chatbot-and-table-container" style="display: flex; justify-content: flex-end;">
+            <div id="table-container" style="width: 50%; display: flex; flex-direction: column; align-items: flex-end;">
+                <div id="table-container" style="width: 50%; display: flex; flex-direction: column; align-items: flex-end;">
+                <div id="buttons">
+                    <button id="button1">Actualizar visualizaciones</button>
+                </div>
+                <div id="table"></div>
+            </div>
+            <div style="max-width: 400px;">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+         
+    </main>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add any additional scripts here -->
+    <script>
+        // Get the UI elements
+        var descriptionDiv = document.querySelector('.description');
+        var bulletListContainer = document.querySelector('#bullet-list-container');
+        var infoParagraph = document.querySelector('#info-paragraph');
+        var actualizarboton = document.querySelector('#button1');
+        var accesodenegado = document.querySelector('#acceso-denegado');
+        var chatbotAndTableContainer = document.querySelector('.chatbot-and-table-container');
+
+        // Hide the UI elements initially
+        bulletListContainer.style.display = 'none';
+        chatbotAndTableContainer.style.display = 'none';
+        infoParagraph.style.display = 'none';
+        accesodenegado.style.display = 'none';
+        actualizarboton.style.display = 'none';
+
+        document.querySelector('df-messenger').addEventListener('df-response-received', function(event) {
+        // Get the custom payload from the response
+            var responseText = event.detail.response.queryResult.fulfillmentText;
+
+            // Check if the printToConsole property exists in the custom payload
+            if (responseText.includes("La contraseña es correcta")) {
+                // Print the message in the UI console
+                console.log(responseText);
+                infoParagraph.style.display = 'block';
+            }
+            else if (responseText.includes("Posees los permisos de acceso a la informacion de este proyecto")) {
+                // Print the message in the UI console
+                accesodenegado.style.display = 'none';
+                updateProject();
+                console.log(responseText);
+            }
+            else if (responseText.includes("No tienes los permisos de acceso a la informacion de este proyecto")) {
+                // Print the message in the UI console
+                console.log(responseText);
+                accesodenegado.style.display = 'block';
+            }
+            else {
+                // Print the message in the UI console
+                console.log(responseText);
+            }
+        });
+
+        function updateProject(){
+            fetch('/get_project')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('1',data);
+                    switch(data[0]) {
+                        case 1:
+                            // Handle the case where the project ID is 1
+                            bulletListContainer.style.display = 'block';
+                            chatbotAndTableContainer.style.display = 'block';
+                            actualizarboton.style.display = 'block';
+                            break;
+                        case 2:
+                            // Handle the case where the project ID is 2
+                            // Create specific components for this project 
+                            break;
+                        case 3:
+                            // Handle the case where the project ID is 3
+                            // Create specific components for this project 
+                            break;
+                        // Add more cases as needed
+                        default:
+                            // Handle the case where the project ID is not 1 or 2 or 3
+                            bulletListContainer.style.display = 'none';
+                            chatbotAndTableContainer.style.display = 'none';
+                    }
+                });
+        }
+
+        function updateTables() {
+            fetch('/get_query_results')
+            .then(response => response.json())
+            .then(data => {
+                console.log('data: ',data);
+
+                var tableContainer = document.getElementById('table');
+                tableContainer.innerHTML = '';
+
+                    // Create a new table
+                var table = document.createElement('table');
+                table.className = 'myTable';
+
+                    // Create the table header
+                var thead = document.createElement('thead');
+                var headerRow = document.createElement('tr');
+                for (var key in data[0]) {
+                    var th = document.createElement('th');
+                    th.appendChild(document.createTextNode(key));
+                    headerRow.appendChild(th);
+                }
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                    // Create the table body
+                var tbody = document.createElement('tbody');
+                for (var i = 0; i < data.length; i++) {
+                    var row = document.createElement('tr');
+                        for (var key in data[i]) {
+                            var td = document.createElement('td');
+                            td.appendChild(document.createTextNode(data[i][key]));
+                            row.appendChild(td);
+                        }
+                        tbody.appendChild(row);
+                    }
+                table.appendChild(tbody);
+
+                    // Add the table to the page
+                tableContainer.appendChild(table);
+                console.log('Table:', table);
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.map(item => item['país_de_destino']),
+                        datasets: [{
+                            data: data.map(item => item['numero_de_exportaciones']),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                });
+            });
+        }
+
+        window.onload = function() {
+            fetch('/load_data')
+            .then(response => response.json())
+            .then(data => {
+                // Create a bullet list
+                var list = document.createElement('ul');
+                for (var i = 0; i < data.length; i++) {
+                    var value = data[i].replace(/"/g, '');
+                    var item = document.createElement('li');
+                    item.appendChild(document.createTextNode(value));
+                    list.appendChild(item);
+                }
+                // Add the list to the page
+                document.getElementById('bullet-list').appendChild(list);
+            });
+
+            document.getElementById('button1').addEventListener('click', function() { updateTables(); });
+
+        };
+        
+        </script>
+</body>
+</html>
