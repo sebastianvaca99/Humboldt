@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot.css') }}">
+    
+    <style>
+    body {
+        background-color: lightgrey;
+        font-family: 'Comic Sans MS';
+        margin: 0;
+    }
+    header h1 {
+        text-align: center;
+        font-size: 3em;
+    }
+    header h2 {
+        text-align: center;
+        font-size: 2em;
+    }
+    main {
+        display: flex; 
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 20px; 
+        justify-content: space-between;
+    }
+    
+    .description {
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% - 120px);
+        text-align: justify; 
+        margin-right: 100px;
+        margin-left: 50px;
+        font-size: 1.5em;
+        margin-bottom: 60px; 
+    }
+    .interaction {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: justify;
+        width: calc(100% - 120px);
+        margin-right: 100px;
+        margin-left: 50px;
+        font-size: 1.5em;
+    }
+    .chatbot-and-table-container {
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% - 120px);
+        text-align: justify; 
+        margin-right: 20px;
+        margin-left: 100px;
+        font-size: 1.0em; 
+    }
+    .chatbot {
+        width: 50%;
+        margin-left: 20px;
+    }
+    .description img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 300px; 
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    .text-and-image {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 40%;
+        margin-right: 20px;
+    }
+    #bullet-list-container {
+    width: 50%;
+    }
+    #bullet-list {
+        overflow-y: auto;
+        max-height: 500px;
+        width: 100%;
+        font-size: 0.8em;
+    }
+    #bullet-list-container h4 {
+    text-align: center;
+    }
+    .chatbot-container, .tables-container {
+    width: 50%; 
+    }
+
+    button {
+        width: 150px; 
+        height: 50px; 
+        font-size: 12px;
+    }
+    #table-container {
+    display: flex;
+    justify-content: top;
+    align-items: flex-start;
+    }
+    #table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    #myChart {
+    width: 400px;
+    height: 400px;
+    }
+    .myTable {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .myTable th, .myTable td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+    df-messenger {
+        --df-messenger-button-titlebar-color: #15a331;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Instituto de Investigación de Recursos Biológicos Alexander von Humboldt</h1>
+        <h2>Centro de Economía y Finanzas para la Biodiversidad</h2>
+    </header>
+    <main>
+        <df-messenger
+            chat-title="Asistente_Virtual"
+            agent-id="bbcd3607-0eac-485a-b08d-0b5a5847a8db"
+            language-code="es"
+            user-icon-color="#123456">
+        ></df-messenger> 
+        <div class="description">
+            <div class="text-and-image">
+                <p>¡Bienvenido al Espacio de Interacción Virtual proporcionado por nuestro Agente Conversacional! Este asistente virtual ha sido diseñado para brindar apoyo integral a los investigadores del Centro de Economía y Finanzas para la Biodiversidad. Su función principal es simplificar el proceso de consulta y búsqueda de información, ofreciendo respuestas precisas a preguntas relacionadas con economía y finanzas en el contexto de la biodiversidad.
+
+                    A través de este espacio virtual, los usuarios tienen acceso directo a datos relevantes y pueden obtener información clave de manera eficiente. El enfoque central de este agente virtual es optimizar el flujo de trabajo de investigación, convirtiéndose en un aliado invaluable para los profesionales que buscan explorar y comprender la intersección entre la economía, las finanzas y la biodiversidad.
+                    
+                    Siéntete libre de hacer preguntas o solicitar información específica. Estamos aquí para hacer que tu experiencia de investigación sea más accesible y efectiva. ¡Adelante, comienza a explorar la riqueza de conocimientos que este espacio de interacción tiene para ofrecer!</p>
+                <img src="https://www.fundacionmalpelo.org/wp-content/uploads/2020/04/Logo-humboldt.png" alt="Logo">
+            </div>
+        </div>
+        <div class="interaction">
+            <p id="info-paragraph">
+                El espacio de interaccion virtual esta ahora activo, a continuacion podras consultar informacion relacionada con los distintos proyectos que el centro posee.
+            </p>
+            <img id="acceso-denegado" src="https://cdn-icons-png.flaticon.com/512/4963/4963030.png" alt="Acceso denegado">
+            <div id="bullet-list-container">
+                <h4>Categorias a seleccionar</h4>
+                <div id="bullet-list"></div>
+            </div>
+        </div>
+        <div id="metadatos" style="text-align: justify; display: flex; flex-direction: column; align-items: center;">
+            <h2 style="text-align: center;">Metadatos</h2>
+            <p style="margin-left: 10%; margin-right: 10%;">Un HUB de Bioeconomía generalmente se enfoca en fomentar la innovación y el desarrollo sostenible en el ámbito de la bioeconomía, que implica la utilización de recursos biológicos y procesos biotecnológicos para generar productos económicos sostenibles. En el contexto de Bogotá Región, estas actividades podrían incluir:</p>
+            <div style="display: flex; justify-content: space-between; width: 90%; margin-left: 5%; margin-right: 5%;">
+                <div style="flex: 1; margin-left: 2%; margin-right: 2%;">
+                    <h3>Investigación y Desarrollo (I+D):</h3>
+                    <ul>
+                        <li>Realizar investigaciones sobre recursos biológicos locales y su potencial para productos y servicios sostenibles.</li>
+                        <li>Desarrollar tecnologías y procesos biotecnológicos innovadores.</li>
+                    </ul>
+                    <h3>Colaboración con Universidades y Centros de Investigación:</h3>
+                    <ul>
+                        <li>Establecer alianzas para proyectos de investigación y desarrollo.</li>
+                        <li>Promover el intercambio de conocimientos y tecnologías.</li>
+                    </ul>
+                    <h3>Apoyo a Emprendimientos y Startups:</h3>
+                        <ul>
+                            <li>Ofrecer asesoramiento y recursos a startups que trabajan en bioeconomía.</li>
+                            <li>Facilitar el acceso a financiamiento y mercados.</li>
+                        </ul>
+                    <h3>Capacitación y Educación:</h3>
+                    <ul>
+                        <li>Organizar talleres, cursos y seminarios sobre bioeconomía y biotecnología.</li>
+                        <li>Fomentar la formación de talento local en áreas relacionadas con la bioeconomía.</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; margin-left: 2%; margin-right: 2%;">
+                    <h3>Desarrollo de Productos Sostenibles:</h3>
+                    <ul>
+                        <li>Promover la creación de productos que utilicen recursos biológicos de manera sostenible.</li>
+                        <li>Incentivar prácticas de producción que minimicen el impacto ambiental.</li>
+                    </ul>
+                    <h3>Cooperación con el Sector Público y Privado:</h3>
+                    <ul>
+                        <li>Trabajar conjuntamente con empresas y entidades gubernamentales para impulsar políticas y proyectos de bioeconomía.</li>
+                        <li>Establecer vínculos con la industria para la comercialización de innovaciones.</li>
+                    </ul>
+                    <h3>Promoción de la Sostenibilidad Ambiental:</h3>
+                    <ul>
+                        <li>Incidir en el desarrollo de una economía basada en el uso sostenible de los recursos biológicos.</li>
+                        <li>Contribuir a la conservación de la biodiversidad y los ecosistemas.</li>
+                    </ul>
+                    <h3>Eventos y Networking:</h3>
+                    <ul>
+                        <li>Organizar eventos de networking para conectar a diferentes actores del ecosistema de bioeconomía.</li>
+                        <li>Participar en ferias y conferencias nacionales e internacionales para promover las iniciativas del HUB.</li>
+                    </ul>
+                </div>                
+            </div>
+            <div style="margin-left: 10%; margin-right: 10%; background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <p>A continuacion se relacionan los datos tecnologicos</p>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li><strong>Tipo de base de datos:</strong> Relacional</li>
+                    <li><strong>Cantidad de tablas en el proyecto:</strong> 1</li>
+                    <li><strong>Nombre de la tabla:</strong> Consolidado</li>
+                    <li><strong>Tipo de instancia donde esta la tabla:</strong> Postgress</li>
+                    <li><strong>Numero de columnas en la tabla:</strong> 64 </li>
+                    <li><strong>Numero de records:</strong> 720.000</li>
+                    <li><strong>Strategia de backup:</strong> Estandar </li>
+                    <li><strong>Detalles de conexion:</strong> No publicos</li>
+                </ul>
+            </div>
+            <table style="margin: 0 auto; border-collapse: collapse; width: 90%;">
+                <tr style="background-color: black; color: white;">
+                    <th>Campo</th>
+                    <th>Descripcion</th>
+                    <th>Tipo de dato</th>
+                    <th>Fuente de informacion</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;">Año/Mes/Día</td>
+                    <td style="border: 1px solid black;">Fecha de la transacción o evento, desglosada en año, mes y día. </td>
+                    <td style="border: 1px solid black;">Numérico</td>
+                    <td style="border: 1px solid black;">Legiscomex</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;">Capítulo del Arancel</td>
+                    <td style="border: 1px solid black;">Código que identifica la categoría arancelaria del producto bajo las normas internacionales de comercio.</td>
+                    <td style="border: 1px solid black;">Texto</td>
+                    <td style="border: 1px solid black;">Legiscomex</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;">Tipo de Declaración:</td>
+                    <td style="border: 1px solid black;">Tipo de declaración aduanera realizada, como exportación, importación, etc.</td>
+                    <td style="border: 1px solid black;">Texto</td>
+                    <td style="border: 1px solid black;">Legiscomex</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;">Aduana/Aduana de Embarque</td>
+                    <td style="border: 1px solid black;">Identifica la oficina aduanera de procesamiento o embarque.</td>
+                    <td style="border: 1px solid black;">Texto</td>
+                    <td style="border: 1px solid black;">Legiscomex</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;">País de Destino/Departamento Origen/Procedencia:</td>
+                    <td style="border: 1px solid black;">Origen y destino de la mercancía. </td>
+                    <td style="border: 1px solid black;">Texto</td>
+                    <td style="border: 1px solid black;">Legiscomex</td>
+                </tr>
+            </table>
+        </div>
+        <div class="chatbot-and-table-container" style="display: flex; flex-direction: column; align-items: center;">
+            <button id="button2">Actualizar informacion</button>
+            <div id ="infoDiv">
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <img id="colombia-img" src="https://www.elpais.com.co/resizer/JAPQOHfS7Qtfsq0dtu5z0hW0Y3k=/1280x0/smart/filters:format(jpg):quality(80)/cloudfront-us-east-1.images.arcpublishing.com/semana/BKALMBZ44JFANIN2VMGAD5XKI4.jpg" alt="colombia" style="width: 600px; height: auto;">
+            </div>
+            <div id="buttons" style="margin-bottom: 10px;">
+                <button id="button1">Actualizar visualizaciones</button>
+            </div>
+            <div id="table-container" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                <div id="table" style="width: 50%; margin-bottom: 20px;"></div>
+                <div id="chart-div" style="width: 50%; height: 400px; display: flex; justify-content: center; align-items: center;">
+                    <canvas id="myChart" ></canvas>
+                </div>
+            </div>
+            
+        </div>
+         
+    </main>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var descriptionDiv = document.querySelector('.description');
+        var bulletListContainer = document.querySelector('#bullet-list-container');
+        var infoParagraph = document.querySelector('#info-paragraph');
+        var actualizarboton = document.querySelector('#button1');
+        var actualizarboton2 = document.querySelector('#button2');
+        var accesodenegado = document.querySelector('#acceso-denegado');
+        var chatbotAndTableContainer = document.querySelector('.chatbot-and-table-container');
+        var infodiv = document.querySelector('#infoDiv');
+        var metadatosdiv = document.querySelector('#metadatos');
+        var tableContainer = document.querySelector('#table-container');
+        var colombiaimg = document.querySelector('#colombia-img');
+
+        bulletListContainer.style.display = 'none';
+        chatbotAndTableContainer.style.display = 'none';
+        infoParagraph.style.display = 'none';
+        accesodenegado.style.display = 'none';
+        actualizarboton.style.display = 'none';
+        actualizarboton2.style.display = 'none';
+        infodiv.style.display = 'none';
+        metadatosdiv.style.display = 'none';
+        tableContainer.style.display = 'none'; 
+        colombiaimg.style.display = 'none';
+
+        document.querySelector('df-messenger').addEventListener('df-response-received', function(event) {
+            var responseText = event.detail.response.queryResult.fulfillmentText;
+
+            if (responseText.includes("La contraseña es correcta")) {
+                console.log(responseText);
+                infoParagraph.style.display = 'block';
+            }
+            else if (responseText.includes("Posees los permisos de acceso a la informacion de este proyecto")) {
+                accesodenegado.style.display = 'none';
+                updateProject();
+                console.log(responseText);
+            }
+            else if (responseText.includes("No tienes los permisos de acceso a la informacion de este proyecto")) {
+                console.log(responseText);
+                accesodenegado.style.display = 'block';
+            }
+            else if (responseText.includes("La informacion ha sido cargada en la pantalla")) {
+                console.log(responseText);
+                chatbotAndTableContainer.style.display = 'block';
+                actualizarboton.style.display = 'none';
+                actualizarboton2.style.display = 'block';
+                metadatosdiv.style.display = 'none';
+                tableContainer.style.display = 'none';
+                colombiaimg.style.display = 'block';
+            }
+
+            else if (responseText.includes("Perfecto Visualiza los resultados de tu consulta")) {
+                console.log(responseText);
+                chatbotAndTableContainer.style.display = 'block';
+                actualizarboton.style.display = 'block';
+                actualizarboton2.style.display = 'none';
+                metadatosdiv.style.display = 'none';
+                infodiv.style.display = 'none';
+                colombiaimg.style.display = 'none';
+                tableContainer.style.display = 'block';
+            }
+            else if (responseText.includes("Ya puedes visualizarlos metadatos")) {
+                console.log(responseText);
+                metadatosdiv.style.display = 'block';
+                actualizarboton.style.display = 'none';
+                actualizarboton2.style.display = 'none';
+                bulletListContainer.style.display = 'none';
+                colombiaimg.style.display = 'none';
+                infodiv.style.display = 'none';
+            }
+            else {
+                console.log(responseText);
+            }
+        });
+
+        function updateProject(){
+            fetch('/get_project')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('1',data);
+                    switch(data[0]) {
+                        case 1:
+                            //bulletListContainer.style.display = 'block';
+                            //chatbotAndTableContainer.style.display = 'block';
+                            //actualizarboton.style.display = 'block';
+                            break;
+                        case 2:
+                            // Handle the case where the project ID is 2
+                            // Create specific components for this project 
+                            break;
+                        case 3:
+                            // Handle the case where the project ID is 3
+                            // Create specific components for this project 
+                            break;
+                        // Add more cases as needed
+                        default:
+                            // Handle the case where the project ID is not 1 or 2 or 3
+                            bulletListContainer.style.display = 'none';
+                            chatbotAndTableContainer.style.display = 'none';
+                    }
+                });
+        }
+        var myChart;
+        function updateTables() {
+            fetch('/get_query_results')
+            .then(response => response.json())
+            .then(data => {
+                console.log('data: ',data);
+
+                var tableContainer = document.getElementById('table');
+                tableContainer.innerHTML = '';
+
+                var table = document.createElement('table');
+                table.className = 'myTable';
+
+                var thead = document.createElement('thead');
+                var headerRow = document.createElement('tr');
+                for (var key in data[0]) {
+                    var th = document.createElement('th');
+                    th.appendChild(document.createTextNode(key));
+                    headerRow.appendChild(th);
+                }
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                var tbody = document.createElement('tbody');
+                for (var i = 0; i < data.length; i++) {
+                    var row = document.createElement('tr');
+                        for (var key in data[i]) {
+                            var td = document.createElement('td');
+                            td.appendChild(document.createTextNode(data[i][key]));
+                            row.appendChild(td);
+                        }
+                        tbody.appendChild(row);
+                    }
+                table.appendChild(tbody);
+
+                tableContainer.appendChild(table);
+                console.log('Table:', table);
+
+                var keys = Object.keys(data[0]);
+                keys.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+                console.log('keys:', keys);
+
+                var labelKey = keys[0];
+                console.log('labelkey', labelKey);
+                var dataKey = keys[1];
+                console.log('datakey:', dataKey);
+                
+
+                if (labelKey == 'numero_de_exportaciones'){
+                    var temp = labelKey;
+                    labelKey = dataKey;
+                    dataKey = temp;
+                }
+
+            
+                console.log('labelkey', labelKey);
+                
+                var labels = data.map(item => item[labelKey]);
+                console.log('lables:', labels);
+            
+                console.log('datakey:', dataKey);
+                    
+                var chartData = data.map(item => item[dataKey]);
+                console.log('chartdata', chartData);
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                
+                
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                });                
+            });
+        }
+
+        function updateText() {
+            fetch('/get_textual_query_results')
+            .then(response => response.json())
+            .then(data => {
+                console.log('data: ', data);
+                var infoDiv = document.getElementById('infoDiv');
+                infoDiv.innerHTML = '';
+
+                var paragraph = document.createElement('p');
+
+                switch(data) {
+                    case 1:
+                        paragraph.textContent = "Colombia tiene un clima de negocios favorable, caracterizado por un régimen democrático estable y políticas de liberalización comercial. El país es reconocido por su diversidad en sectores como la agricultura, con productos líderes como café, flores y frutas. En minería, Colombia es un importante productor de carbón, níquel y esmeraldas. El sector de servicios está creciendo, especialmente en áreas de tecnología de la información y turismo. El gobierno fomenta la inversión extranjera directa y ha mejorado la infraestructura y las regulaciones para facilitar el comercio y la inversión.";
+                        infoDiv.style.display = 'block';
+                        break;
+                    case 2:
+                        paragraph.textContent = "Los exportadores colombianos disfrutan de múltiples beneficios, incluyendo acceso preferencial a mercados internacionales a través de más de una docena de Tratados de Libre Comercio. Colombia también ofrece incentivos como exenciones fiscales, regímenes especiales para zonas francas, y programas de apoyo a la exportación para pymes. Además, el país ha implementado reformas para mejorar la logística y la infraestructura portuaria, reduciendo los costos y tiempos de exportación.";
+                        break;
+                    case 3:
+                        paragraph.textContent = "Colombia ha firmado TLC con diversos países y bloques, incluyendo Estados Unidos, Canadá, la Unión Europea, Corea del Sur, y la Alianza del Pacífico (con Chile, México y Perú). Estos acuerdos han abierto mercados para productos colombianos, reducido aranceles y barreras comerciales, y mejorado la protección para inversionistas y exportadores. Estos tratados facilitan el acceso a mercados claves y promueven la diversificación de las exportaciones colombianas más allá de los productos tradicionales.";
+                        break;
+                    case 4:
+                        paragraph.textContent = "El PIB de Colombia se distribuye principalmente en servicios (58%), industria (33%) y agricultura (9%). El país ha mostrado resiliencia económica, manteniendo un crecimiento promedio de alrededor del 3% en los últimos años. El desempleo ha fluctuado, pero con tendencias de disminución a largo plazo. El gobierno está enfocado en políticas para mejorar la productividad, diversificar la economía y aumentar la inversión en tecnología e infraestructura. La inversión extranjera directa ha crecido, especialmente en sectores de energía, minería y servicios.";
+                        break;
+                    case 5:
+                        paragraph.textContent = "En Antioquia, el sector de flores es prominente, especialmente en el área de Medellín, y es un importante exportador a Estados Unidos y Europa. El Valle del Cauca es un centro para la producción de azúcar y productos agrícolas. El departamento del Huila es famoso por su café de alta calidad, muy apreciado en mercados internacionales. La región de la Orinoquía, especialmente el departamento del Meta, es conocida por su producción de arroz y ganado. En la costa Caribe, departamentos como Atlántico y Bolívar se destacan en la producción de productos químicos y manufacturas.";
+                        break;
+                    case 6:
+                        paragraph.textContent = "Recientemente, Colombia ha implementado varias políticas para fortalecer su economía y atraer inversión extranjera. Estas incluyen reformas tributarias para simplificar el sistema de impuestos y hacerlo más atractivo para los inversores. Además, el gobierno ha estado promoviendo la inversión en infraestructura y tecnología para mejorar la eficiencia de las exportaciones. Se han establecido también incentivos para sectores como la energía renovable y la industria tecnológica, buscando diversificar la economía más allá de los sectores tradicionales. Estas políticas están diseñadas para crear un ambiente de negocios más dinámico y competitivo en el escenario global.";
+                        break;
+                    case 7:
+                        paragraph.textContent = "Colombia está experimentando un crecimiento significativo en varios sectores emergentes. En tecnología, el país está desarrollando un ecosistema de startups tecnológicas, con apoyo gubernamental y privado, especialmente en Bogotá, Medellín y Cali. El sector de la energía renovable está en auge, con el gobierno promoviendo proyectos de energía solar y eólica para diversificar la matriz energética. Además, el turismo está viviendo un renacimiento, enfocado en ecoturismo y turismo cultural, aprovechando la biodiversidad y riqueza cultural del país. Estos sectores representan oportunidades atractivas para inversores y empresas interesadas en mercados en desarrollo.";
+                        break;
+                    case 8:
+                        paragraph.textContent = "A pesar de sus muchas oportunidades, Colombia enfrenta desafíos que los inversores deben considerar. Estos incluyen la variabilidad política y social, que a veces puede generar incertidumbre económica. Las disparidades regionales en desarrollo e infraestructura pueden afectar la eficiencia y el costo de hacer negocios. Además, aunque la seguridad ha mejorado significativamente en las últimas décadas, aún existen áreas con problemas de seguridad. Es importante que los inversores realicen una evaluación de riesgo detallada y consideren estrategias de mitigación al planificar sus inversiones en Colombia.";
+                        break;
+                    default:
+                        paragraph.textContent = "No hay informacion disponible para esta opcion.";
+                }
+
+                infoDiv.appendChild(paragraph);
+
+                    });
+                }
+
+        window.onload = function() {
+            fetch('/load_data')
+            .then(response => response.json())
+            .then(data => {
+                // Create a bullet list
+                var list = document.createElement('ul');
+                for (var i = 0; i < data.length; i++) {
+                    var value = data[i].replace(/"/g, '');
+                    var item = document.createElement('li');
+                    item.appendChild(document.createTextNode(value));
+                    list.appendChild(item);
+                }
+                // Add the list to the page
+                document.getElementById('bullet-list').appendChild(list);
+            });
+
+            document.getElementById('button1').addEventListener('click', function() { updateTables(); });
+            document.getElementById('button2').addEventListener('click', function() { updateText(); });
+
+        };
+        
+        </script>
+</body>
+</html>
