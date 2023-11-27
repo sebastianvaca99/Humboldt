@@ -1,6 +1,7 @@
 #Archivo encargado de la conexión con la base de datos y de la ejecución de las consultas
 import psycopg2
 import psycopg2.extras
+from collections import OrderedDict
 
 #Funcion que retorna las categorias de la base de datos para seleccionar en el dropdown
 def get_categorias():
@@ -181,4 +182,4 @@ def run_query(numero):
 
     cur.close()
     conn.close()
-    return [dict(row) for row in rows]
+    return [OrderedDict(row) for row in rows]

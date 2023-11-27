@@ -1,15 +1,21 @@
-#Importar librerias y funciones necdsarias para el funcionamiento del webhook
+#Importar librerias y funciones necEsarias para el funcionamiento del webhook
 import logging
 from db import  run_query,verificar_usuario, get_proyectos, verificar_permiso_proyecto, set_proyecto
 
 #Variables globales qque guardan los resultados de las comnsultas
 query_results = None
+textual_query_results = None
 saved_password = None
 user_id = None
 
 def get_query_results():
     global query_results
     return query_results
+
+def get_textual_query_results():
+    global textual_query_results
+    return textual_query_results
+
 #Funcion que procesa la peticion del usuario cuando es enviada a dialogflow
 def processRequest(req):
 
@@ -87,23 +93,89 @@ def processRequest(req):
 
         query_results = run_query(number)
 
-        fulfillmentText = "Perfecto Visualiza los resultados de tu consulta"
+        fulfillmentText = "Perfecto Visualiza los resultados de tu consulta. \n\nDeseas realizar otra consulta?"
         
         return {
             "fulfillmentText": fulfillmentText
         }
     
-    elif intent == 'SALUDO_EXPORTACIONES_CATEGORIA':
-        query_text= user_query
-        for i in range(2):
-            query_results[i] = run_query(i+1, query_text)
+    elif intent == 'CONSULTA_MERCADOS':
+            
+            fulfillmentText = "Que información te gustaría conocer: \n\n1. Perfil de negocios de Colombia.\n2. Beneficios exportadores colombianos.\n3. Tratados libre comercio.\n4. Perfil económico de Colombia.\n5. Producción en departamentos.\n6. Iniciativas y políticas gubernamentales recientes.\n7. Oportunidades emergentes.\n8. Análisis de riesgo"
+            
+            return {
+                "fulfillmentText": fulfillmentText
+            }
 
-        fulfillmentText = "Perfecto puedes interactuar con los botones para ver la informacion asociada a exportaciones de el producto que seleccionaste"
+    elif intent == 'CONSULTA_MERCADOS_QUERY':
+        global textual_query_results
+        parameters = result.get("parameters")
+        logging.debug(f"Parameters: {parameters}")
+        number = int(parameters.get("number2"))
+        logging.debug(f"Number: {number}")
+
+        textual_query_results = number
+
+        fulfillmentText = "La informacion ha sido cargada en la pantalla. Presiona el boton para visualizarla. \n\n Deseas conocer algo mas del mercado?"
+        
         return {
-        "fulfillmentText": fulfillmentText
+            "fulfillmentText": fulfillmentText
+        }
+    
+
+    elif intent == 'CONSULTA_EXPORTACIONES_QUERY_SI':
+        return {
+            "followupEventInput": {
+                "name": "reiniciare",
+                "languageCode": "es",
+               
+        }
     }
-    elif intent == 'Despido':
-        fulfillmentText = "Listo ha sido un placer ayudarte!"
+
+    elif intent == 'CONSULTA_EXPORTACIONES_QUERY_NO':
+        return {
+            "followupEventInput": {
+                "name": "reiniciarp",
+                "languageCode": "es",
+                "parameters": {
+                    "number": 1
+                }
+        }
+    }
+
+    elif intent == 'CONSULTA_MERCADOS_QUERY_SI':
+        return {
+            "followupEventInput": {
+                "name": "inteligencia",
+                "languageCode": "es",
+                "parameters": {
+                    "mercados": "mercados"
+                }
+        }
+    }
+    
+    elif intent == 'CONSULTA_MERCADOS_QUERY_NO':
+        return {
+            "followupEventInput": {
+                "name": "reiniciarp",
+                "languageCode": "es",
+                "parameters": {
+                    "number": 1
+                }
+        }
+    }
+
+    elif intent == 'PROYECTOS_SELECCION_METADATOS_SI':
+        return {
+            "followupEventInput": {
+                "name": "reiniciarp",
+                "languageCode": "es",
+                "parameters": {
+                    "number": 1
+                }
+        }
+    }
+
     else:
         fulfillmentText = "I'm sorry, I didn't understand that request."
 

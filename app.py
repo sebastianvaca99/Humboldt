@@ -3,7 +3,7 @@ import logging
 from flask import Flask, make_response, request, jsonify, render_template 
 from webhook import processRequest
 from db import  get_categorias, set_proyecto, get_project
-from webhook import get_query_results
+from webhook import get_query_results, get_textual_query_results
 import json
 
 logging.basicConfig(level=logging.DEBUG)
@@ -43,7 +43,14 @@ def get_query_results_endpoint():
     print(query_results)
     print('llegamos aca omeEEEEEE')
     return jsonify(query_results)
-    
+
+@app.route('/get_textual_query_results', methods=['GET'])
+def get_textual_query_results_endpoint():
+    textual_query_results = get_textual_query_results()
+    print('llegamos aca ome')
+    print(textual_query_results)
+    print('llegamos aca omeEEEEEE')
+    return jsonify(textual_query_results)
 
 @app.route('/')
 def chatbot_ui():
