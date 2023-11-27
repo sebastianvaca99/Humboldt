@@ -39,24 +39,18 @@ def load_data():
 @app.route('/get_query_results', methods=['GET'])
 def get_query_results_endpoint():
     query_results = get_query_results()
-    print('llegamos aca ome')
     print(query_results)
-    print('llegamos aca omeEEEEEE')
     return jsonify(query_results)
 
 @app.route('/get_textual_query_results', methods=['GET'])
 def get_textual_query_results_endpoint():
     textual_query_results = get_textual_query_results()
-    print('llegamos aca ome')
     print(textual_query_results)
-    print('llegamos aca omeEEEEEE')
     return jsonify(textual_query_results)
 
 @app.route('/')
 def chatbot_ui():
     set_proyecto(0)
     return render_template('chatbot.html')
-
-# Process a request from Dialogflow
 
 

@@ -177,7 +177,7 @@ def processRequest(req):
     }
 
     else:
-        fulfillmentText = "I'm sorry, I didn't understand that request."
+        fulfillmentText = "Lo siento no entiendo lo que quieres decir"
 
     return {
         "fulfillmentText": fulfillmentText

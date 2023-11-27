@@ -111,7 +111,6 @@ def set_proyecto(project_id):
      
     cur = conn.cursor()
 
-    # Hace la consulta
     cur.execute('''UPDATE public.project_temp 
                     SET project = %s
                     WHERE id = 1
@@ -128,23 +127,18 @@ def get_project():
             user="postgres",
             password="mine")
 
-    # Abre un cursor para realizar operaciones en la base de datos
     cur = conn.cursor()
 
-    # Hace la consulta
     cur.execute('''SELECT project FROM public.project_temp WHERE id = 1''')
 
-    # Obtiene la fila
     row = cur.fetchone()
 
     conn.commit()
     cur.close()
     conn.close()
 
-    # Retorna una lista con las categorias
     return row if row else None
      
-#Funcion que corre las diferentes consultas segun el capitulo de arancel seleccionado
 def run_query(numero):
     conn = psycopg2.connect(
             host="35.239.3.252",
@@ -154,10 +148,8 @@ def run_query(numero):
     
     print(numero)
 
-    # Abre un cursor para realizar operaciones en la base de datos
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if numero == 1:
-    # Query total export quantities for each country where capitulo_del_arancel is not null
         cur.execute('''
             SELECT "país_de_destino" as Pais_destino, COUNT(*) AS Numero_de_Exportaciones 
             FROM public.consolidado
@@ -167,7 +159,7 @@ def run_query(numero):
         ''')
 
     elif numero == 2:
-        # Query total export quantities for each month
+        
         cur.execute('''
             SELECT capitulo_del_arancel as Categorias_productos, COUNT(*) AS Numero_de_Exportaciones 
             FROM public.consolidado 
